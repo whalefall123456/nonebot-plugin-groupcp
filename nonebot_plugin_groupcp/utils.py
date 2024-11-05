@@ -38,14 +38,21 @@ async def download_url(url: str) -> bytes:
 
 
 
+
 def check_file_exist():
     # 检查文件夹是否存在，不存在则创建
     if not config.data_path.exists():
         config.data_path.mkdir(parents=True)
-    with open(config.group_data_path, "w", encoding="utf8") as f:
-        data = {"group": {}, "time": ""}
-        json.dump(data, f, ensure_ascii=False, indent=4)
-        f.close()
+        with open(config.group_data_path, "w", encoding="utf8") as f:
+            data = {"group": {}, "time": ""}
+            json.dump(data, f, ensure_ascii=False, indent=4)
+            f.close()
+    else:
+        if not config.group_data_path.exists():
+            with open(config.group_data_path, "w", encoding="utf8") as f:
+                data = {"group": {}, "time": ""}
+                json.dump(data, f, ensure_ascii=False, indent=4)
+                f.close()
 
 
 def get_data():
@@ -101,14 +108,13 @@ def get_cp_info(group_id: str):
     return group_data.get("cp_info", {})
 
 
-def save_cp_info(group_id: str, cp_info: dict, no_cp_list: list):
+def save_cp_info(group_id: str, cp_info: dict):
     group_data = get_group_data(group_id)
     group_data["cp_info"] = cp_info
     # if "cp_info" not in group_data:
     #     group_data["cp_info"] = {user_cp_info["cp_id"]:cp_info, cp_info["cp_id"]:user_cp_info}
     # group_data["cp_info"][user_cp_info["cp_id"]] = cp_info
     # group_data["cp_info"][cp_info["cp_id"]] = user_cp_info
-    # group_data["no_cp_list"] = no_cp_list
     save_group_data(group_id, group_data)
     return True
 
@@ -152,6 +158,13 @@ def save_nocp_list(group_id: str, no_cp_list: list):
 def get_divorce_list(group_id: str):
     group_data = get_group_data(group_id)
     return group_data.get("divorce_list", {})
+
+
+def save_divorce_list(group_id: str, divorce_list: dict):
+    group_data = get_group_data(group_id)
+    group_data["divorce_list"] = divorce_list
+    save_group_data(group_id, group_data)
+    return True
 
 
 
