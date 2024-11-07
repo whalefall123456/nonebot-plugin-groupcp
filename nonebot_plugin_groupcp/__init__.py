@@ -1,13 +1,14 @@
 import random
 import time
-
 from nonebot import get_plugin_config, require
+require("nonebot_plugin_apscheduler")
+require("nonebot_plugin_userinfo")
+
 from nonebot.plugin import PluginMetadata
 from nonebot.plugin.on import on_message, on_command
 from nonebot.adapters.onebot.v11 import Message, Event, MessageEvent, MessageSegment, GroupMessageEvent,Bot
 from nonebot_plugin_userinfo import get_user_info
-
-require("nonebot_plugin_userinfo")
+from nonebot_plugin_apscheduler import scheduler
 
 from .config import Config
 from .utils import *
@@ -115,8 +116,11 @@ async def divorce_applicant_handle(bot:Bot, event: GroupMessageEvent):
         await divorce_applicant.finish(message)
 
 
+# 使用apscheduler添加定时任务，每天0点清理离婚记录
+@scheduler.scheduled_job("cron", hour=0, minute=0, second=0)
+async def clear_divorce_list():
+    init_file()
 
-# 使用
 
 
 

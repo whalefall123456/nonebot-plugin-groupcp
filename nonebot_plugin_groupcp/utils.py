@@ -55,6 +55,20 @@ def check_file_exist():
                 f.close()
 
 
+# 初始化文件
+def init_file():
+    """
+    将文件初始化，即清空之前的数据
+    :return:
+    """
+    check_file_exist()
+    with open(config.group_data_path, "w", encoding="utf8") as f:
+        data = {"group": {}, "time": ""}
+        json.dump(data, f, ensure_ascii=False, indent=4)
+        f.close()
+    return True
+
+
 def get_data():
     """
     获取全部数据
